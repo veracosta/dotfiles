@@ -3,7 +3,7 @@ filetype plugin indent off
 
 if has('vim_starting')
   set runtimepath+=~/.vim/bundle/neobundle.vim
-  call neobundle#rc(expand('~/.vim/bundle'))
+  call neobundle#begin(expand('~/.vim/bundle'))
 endif 
 
 NeoBundleFetch 'Shougo/neobundle.vim'
@@ -38,6 +38,10 @@ NeoBundle 'tomasr/molokai'
 " カラースキーム一覧表示に Unite.vim を使う
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'ujihisa/unite-colorscheme'
+
+NeoBundle 'Townk/vim-autoclose'
+
+call neobundle#end()
 
 filetype plugin indent on
 
@@ -125,10 +129,3 @@ set history=10000
 set visualbell t_vb=
 set noerrorbells "エラーメッセージの表示時にビープを鳴らさない
 
-imap { {}<LEFT>
-imap ( ()<LEFT>
-imap [ []<LEFT>
-imap " ""<LEFT>
-imap <C-j> <esc>
-nnoremap ; :
-imap <C-l> <RIGHT>
