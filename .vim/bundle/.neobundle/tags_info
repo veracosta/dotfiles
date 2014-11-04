@@ -10,6 +10,7 @@ neosnippet.vim
 sudo.vim
 unite-colorscheme
 unite.vim
+vim-autoclose
 vim-colors-solarized
 vim-colors-wombat
 vim-pyte
