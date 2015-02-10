@@ -34,6 +34,7 @@ NeoBundle 'therubymug/vim-pyte'
 " molokai カラースキーム
 NeoBundle 'tomasr/molokai'
 "NeoBundle 'tomtom/tcomment_vim.vim'
+NeoBundle 'itchyny/lightline.vim'
 
 " カラースキーム一覧表示に Unite.vim を使う
 NeoBundle 'Shougo/unite.vim'
@@ -45,9 +46,9 @@ call neobundle#end()
 
 filetype plugin indent on
 
-colorscheme default
+colorscheme wombat
 "if &term =~ "xterm-256color" || "screen-256color"
-"  set t_Co=256
+set t_Co=256
 "  set t_Sf=[3%dm
 "  set t_Sb=[4%dm
 "elseif &term =~ "xterm-color"
@@ -61,13 +62,13 @@ hi PmenuSel cterm=reverse ctermfg=33 ctermbg=222 gui=reverse guifg=#3399ff guibg
 " 画面表示の設定
 
 set number         " 行番号を表示する
-set cursorline     " カーソル行の背景色を変える
-set cursorcolumn   " カーソル位置のカラムの背景色を変える
+" set cursorline     " カーソル行の背景色を変える
+" set cursorcolumn   " カーソル位置のカラムの背景色を変える
 set laststatus=2   " ステータス行を常に表示
-set cmdheight=2    " メッセージ表示欄を2行確保
+"set cmdheight=2    " メッセージ表示欄を2行確保
 set showmatch      " 対応する括弧を強調表示
 set helpheight=999 " ヘルプを画面いっぱいに開く
-set list           " 不可視文字を表示
+"set list           " 不可視文字を表示
 " 不可視文字の表示記号指定
 set listchars=tab:?\ ,eol:?,extends:?,precedes:?
 
@@ -129,3 +130,63 @@ set history=10000
 set visualbell t_vb=
 set noerrorbells "エラーメッセージの表示時にビープを鳴らさない
 
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ 'mode_map': { 'c': 'NORMAL' },
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ] ]
+      \ },
+      \ 'component_function': {
+      \   'modified': 'MyModified',
+      \   'readonly': 'MyReadonly',
+      \   'fugitive': 'MyFugitive',
+      \   'filename': 'MyFilename',
+      \   'fileformat': 'MyFileformat',
+      \   'filetype': 'MyFiletype',
+      \   'fileencoding': 'MyFileencoding',
+      \   'mode': 'MyMode',
+      \ },
+      \ 'separator': { 'left': '?', 'right': '?' },
+      \ 'subseparator': { 'left': '?', 'right': '?' }
+      \ }
+
+function! MyModified()
+  return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+
+function! MyReadonly()
+  return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? '?' : ''
+endfunction
+
+function! MyFilename()
+  return ('' != MyReadonly() ? MyReadonly() . ' ' : '') .
+        \ (&ft == 'vimfiler' ? vimfiler#get_status_string() : 
+        \  &ft == 'unite' ? unite#get_status_string() : 
+        \  &ft == 'vimshell' ? vimshell#get_status_string() :
+        \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
+        \ ('' != MyModified() ? ' ' . MyModified() : '')
+endfunction
+
+function! MyFugitive()
+  if &ft !~? 'vimfiler\|gundo' && exists("*fugitive#head")
+    let _ = fugitive#head()
+    return strlen(_) ? '? '._ : ''
+  endif
+  return ''
+endfunction
+
+function! MyFileformat()
+  return winwidth(0) > 70 ? &fileformat : ''
+endfunction
+
+function! MyFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
+
+function! MyFileencoding()
+  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+endfunction
+
+function! MyMode()
+  return winwidth(0) > 60 ? lightline#mode() : ''
+endfunction  ') ')} } ] ] ]} }}
